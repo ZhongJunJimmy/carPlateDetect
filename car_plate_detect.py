@@ -87,7 +87,7 @@ def location(img):
 					#pts = np.array(screenCnt, np.int32)
 					#cv2.polylines(img, [pts], True, (0, 0, 255), 3)
 
-					#cv2.imwrite("./result/result_"+time.strftime("%Y%m%d%H%M%S", time.localtime())+str(random.random()*10)+".jpg",result)
+					cv2.imwrite("./result/result_"+time.strftime("%Y%m%d%H%M%S", time.localtime())+str(random.random()*10)+".jpg",result)
 					print('success')
 		
 	
