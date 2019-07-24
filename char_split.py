@@ -40,13 +40,20 @@ def horizontalProjector(img):
 	start_state=0
 	end=0
 	end_state=0
+	print(a)
 	for i in range(0,len(a)):
-		if start_state==0 & a[i]==0:
+		if (start_state==0) & (a[i]==0):
 			if(a[i+1]!=0):
 				start=i
 				start_state=1
-	print(str(a[start]))
-	return thresh
+				i+=1
+
+		if (start_state==1) & (end_state==0) & (a[i]==0):
+			if(a[i+1]==0):
+				end=i
+				end_state=1
+	crop_img = img[start:end, 0:300]
+	return crop_img
 
 
 
@@ -55,10 +62,11 @@ GrayImage=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)   #RGB 2 Gray
 
 plt.figure(figsize=(10,5)) 
 plt.suptitle('compare') 
-plt.subplot(2,2,1), plt.title('GrayImage')
+plt.subplot(3,2,1), plt.title('GrayImage')
 plt.imshow(GrayImage,cmap ='gray'), plt.axis('off')
-plt.subplot(2,2,2), plt.title('horizontal')
+plt.subplot(3,2,2), plt.title('horizontal')
 plt.imshow(horizontalProjector(GrayImage),cmap ='gray'), plt.axis('off')
-plt.subplot(2,2,3), plt.title('vertical')
+plt.subplot(3,2,3), plt.title('vertical')
 plt.imshow(verticalProjector(GrayImage),cmap ='gray'), plt.axis('off')
+
 plt.show()
