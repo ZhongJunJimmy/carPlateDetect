@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 img = cv2.imread('./W22207.jpg',cv2.COLOR_BGR2GRAY)
 import matplotlib.pyplot as plt
+import pdb
 
 def verticalProjector(img):
 	
@@ -20,7 +21,38 @@ def verticalProjector(img):
 	for j  in range(0,w):
 		for i in range((h-a[j]),h):
 			thresh[i,j]= 0
+	average=[]
+	for k in range(4,len(a)):
+		sum=0
+		for l in range(k-4,k+1):
+			sum+=a[l]
+
+		average.append(sum/5)
+	print(average)
+	trough_point=[]
+	crest_point=[]
+
+	for m in range(0,len(average)):
+		if m<len(average)-2:
+			if((average[m-1]>average[m-2]) & (average[m]>average[m-1]) & (average[m]>average[m+1]) & (average[m+2]<average[m+1])):
+				crest_point.append(m)
+
+			if((average[m-1]<average[m-2]) & (average[m]<average[m-1]) & (average[m]<average[m+1]) & (average[m+2]>average[m+1])):
+				#pdb.set_trace()
+				trough_point.append(m)
+
+	for n in range(0,len(trough_point)):
+		print(n,a[n])
+	for o in range(0,len(crest_point)):
+		print(o,a[o])
+
 	return thresh
+
+
+
+
+
+	
 
 def horizontalProjector(img):
 	ret,thresh=cv2.threshold(GrayImage,130,255,cv2.THRESH_BINARY)  #圖片二值化（130,255）之間的點變為255（背景）
@@ -40,7 +72,6 @@ def horizontalProjector(img):
 	start_state=0
 	end=0
 	end_state=0
-	print(a)
 	for i in range(0,len(a)):
 		if (start_state==0) & (a[i]==0):
 			if(a[i+1]!=0):
@@ -67,6 +98,6 @@ plt.imshow(GrayImage,cmap ='gray'), plt.axis('off')
 plt.subplot(3,2,2), plt.title('horizontal')
 plt.imshow(horizontalProjector(GrayImage),cmap ='gray'), plt.axis('off')
 plt.subplot(3,2,3), plt.title('vertical')
-plt.imshow(verticalProjector(GrayImage),cmap ='gray'), plt.axis('off')
+plt.imshow(verticalProjector(horizontalProjector(GrayImage)),cmap ='gray'), plt.axis('off')
 
 plt.show()
