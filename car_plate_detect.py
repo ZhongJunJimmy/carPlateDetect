@@ -5,6 +5,7 @@ import imutils
 import numpy as np
 import time
 import random
+import os
 from matplotlib import pyplot as plt
 
 def checkSize(object):
@@ -60,7 +61,7 @@ def location(img):
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	gray = cv2.bilateralFilter(gray, 5, 21, 21)
 
-	kernel=np.ones((7,11),np.uint8)
+	kernel=np.ones((3,3),np.uint8)
 	c=cv2.morphologyEx(gray,cv2.MORPH_CLOSE,kernel)
 	
 	blur=cv2.GaussianBlur(c,(3,3),0)
@@ -79,30 +80,31 @@ def location(img):
 		
 		if len(approx)==4:
 			screenCnt=resetPoint(approx)
- 
 			if(len(screenCnt)!=0):
 				if(checkSize(screenCnt)):
 					result=PerspectiveTransform(screenCnt,img)
 
-					#pts = np.array(screenCnt, np.int32)
+					pts = np.array(screenCnt, np.int32)
 					#cv2.polylines(img, [pts], True, (0, 0, 255), 3)
-
+					#cv2.imshow("result",img)
 					cv2.imwrite("./result/result_"+time.strftime("%Y%m%d%H%M%S", time.localtime())+str(random.random()*10)+".jpg",result)
 					print('success')
 		
 	
 
-cap=cv2.VideoCapture("./night.mp4")
-while(True):
-	ret,frame=cap.read()
-	if(ret):
-		location(frame)
-	else:
-		break
-
-
-"""
-img=cv2.imread('./car/01_0099D.jpg')
-location(img)
-"""
-  
+if __name__ == '__main__':
+	
+	cap=cv2.VideoCapture("rtsp://admin:admin@211.23.106.143:554/media?profile=h264")
+	while(True):
+		ret,frame=cap.read()
+		if(ret):
+			location(frame)
+		else:
+			break
+	"""
+	img=cv2.imread('./car/01_0099D.jpg')
+	location(img)
+	
+	for filename in os.listdir(r"./car/traningData"):
+		cv2.imshow("test","./car/traningData/"+filename)
+	"""
