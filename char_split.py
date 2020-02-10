@@ -90,7 +90,24 @@ def horizontalProjector(img):
 
 GrayImage=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)   #RGB 2 Gray
 
+inputImage=horizontalProjector(GrayImage)
+#二值化圖片
+blurred = cv2.GaussianBlur(inputImage, (11, 11), 0)
+binaryIMG = cv2.Canny(blurred, 20, 160)
 
+#cv2.imshow('',binaryIMG)
+#cv2.waitKey(0)
+(cnts, _) = cv2.findContours(binaryIMG.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+clone=binaryIMG.copy()
+for c in cnts:
+	box = cv2.minAreaRect(c)
+	box = np.int0(cv2.boxPoints (box))  #–> int0會省略小數點後方的數字
+	cv2.drawContours(clone,[box],-1,(255,255,255),2)
+cv2.imshow('',clone)
+cv2.waitKey(0)
+
+
+"""
 plt.figure(figsize=(10,5)) 
 plt.suptitle('compare') 
 plt.subplot(3,2,1), plt.title('GrayImage')
@@ -98,6 +115,7 @@ plt.imshow(GrayImage,cmap ='gray'), plt.axis('off')
 plt.subplot(3,2,2), plt.title('horizontal')
 plt.imshow(horizontalProjector(GrayImage),cmap ='gray'), plt.axis('off')
 plt.subplot(3,2,3), plt.title('vertical')
-plt.imshow(verticalProjector(horizontalProjector(GrayImage)),cmap ='gray'), plt.axis('off')
+plt.imshow(verticalProjector(GrayImage),cmap ='gray'), plt.axis('off')
 
 plt.show()
+"""

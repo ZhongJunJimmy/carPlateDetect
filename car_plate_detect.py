@@ -85,10 +85,13 @@ def location(img):
 					result=PerspectiveTransform(screenCnt,img)
 
 					pts = np.array(screenCnt, np.int32)
+					return [pts]
+
+
 					#cv2.polylines(img, [pts], True, (0, 0, 255), 3)
 					#cv2.imshow("result",img)
-					cv2.imwrite("./result/result_"+time.strftime("%Y%m%d%H%M%S", time.localtime())+str(random.random()*10)+".jpg",result)
-					print('success')
+					#cv2.imwrite("./result/result_"+time.strftime("%Y%m%d%H%M%S", time.localtime())+str(random.random()*10)+".jpg",result)
+					#print('success')
 		
 	
 
@@ -98,7 +101,17 @@ if __name__ == '__main__':
 	while(True):
 		ret,frame=cap.read()
 		if(ret):
-			location(frame)
+			pts=location(frame)
+			if(pts==None):
+				frame=cv2.resize(frame,(640,480), interpolation = cv2.INTER_CUBIC)
+			else:
+				frame=cv2.polylines(frame, [pts], True, (0, 0, 255), 3)
+				frame=cv2.resize(frame,(640,480), interpolation = cv2.INTER_CUBIC)
+			cv2.imshow("result",frame)
+			cv2.waitKey(100)
+
+
+
 		else:
 			break
 	"""
